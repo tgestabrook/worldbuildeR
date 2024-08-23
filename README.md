@@ -21,6 +21,15 @@ Unlike other guides and tools for making fantasy maps, `worldbuildeR` is intende
 
 ## Roadmap
 
+### Top priority
+[ ] - Add functions to generate maps from noise
+[ ] - Implement precipiton erosion algorithm
+
+### Secondary priority
+[ ] - Generate watersheds and rivers
+[ ] - Generate random weather
+[ ] - Assign biomes
+
 ## Resources
 
 
