@@ -12,6 +12,17 @@ terra::plot(generate_fractal_noise(sample_dem, fractal = 'rigid-multi', lacunari
 
 test <- generate_perlin_noise(sample_dem, frequency=0.005)
 terra::plot(test)
-terra::plot(rescale_heightmap(test))
+test <- rescale_heightmap(test)
+terra::plot(test)
+
+test2 <- generate_fractal_noise(sample_dem, fractal = 'rigid-multi', lacunarity = 1.9, octaves=7, gain=2)
+terra::plot(test2)
+test2 <- rescale_heightmap(test2, 5000, -3000)
+terra::plot(test2)
+
+test3 <- thermal_erosion(test2, iterations = 10)
+terra::plot(c(test2, test3))
+
+
 
 
