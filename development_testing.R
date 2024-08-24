@@ -16,12 +16,12 @@ test <- rescale_heightmap(test)
 terra::plot(test)
 
 test2 <- generate_fractal_noise(sample_dem, fractal = 'rigid-multi', lacunarity = 1.9, octaves=7, gain=2)
-terra::plot(test2)
+terra::plot(test2, col=topo_lookup)
 test2 <- rescale_heightmap(test2, 5000, -3000)
 terra::plot(test2)
 
-test3 <- thermal_erosion(test2, iterations = 10)
-terra::plot(c(test2, test3))
+test3 <- thermal_erosion(test, iterations = 20)
+terra::plot(c(test, test3), col=topo_lookup)
 
 
 

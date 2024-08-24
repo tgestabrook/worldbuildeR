@@ -18,7 +18,10 @@ thermal_erosion <- function(r, talus_angle=40, relax=0.25, iterations=1){  # htt
   return(r + dhdt)
 }
 
+#' @export
+rainfall_erosion <- function(r, rainfall=terra::rast(r, vals=1)){  # https://www.sciencedirect.com/science/article/pii/S0098300400001679
 
+}
 
 
 
