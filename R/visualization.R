@@ -6,3 +6,18 @@ topo_lookup <- data.frame(
             '#DED6A3', '#D3CA9D', '#CAB982', '#C3A76B', '#B9985A', '#AA8753', '#AC9A7C', '#BAAE9A',
             '#CAC3B8', '#E0DED8', '#F5F4F2')
 )
+
+#' @export
+render_terrain <- function(r){
+  hillshade = shade(terrain(r, v='slope', unit='radians'), terrain(r, v='aspect', unit='radians')
+  terra::plot(r, col=topo_lookup)
+  terra::plot(hillshade, col=grey(0:100/100), range=c(0,1), alpha=0.5 add=T, legend=F)
+}
+
+
+
+
+
+
+
+
