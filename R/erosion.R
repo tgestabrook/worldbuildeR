@@ -26,17 +26,18 @@ thermal_erode <- function(r, talus_angle=40, relax=0.25, iterations=1){  # https
   return(terra::rast(df, type='xyz', crs=terra::crs(r), ext=terra::ext(r)))
 }
 
-.flow_downhill <- function(r, r_cells, startcell){
+.flow_downhill <- function(r, cellfocals, startcell){
 
   cell <- startcell
   flow_path <- c()
 
   focals <- terra::focalValues(r)
-  cellfocals <- terra::focalValues(r_cells)
+  #cellfocals <- terra::focalValues(.cellrast(r))
 
   outlet=T
   while(outlet==T){
     flow_path <- c(flow_path, cell)  # this will record the downslope path
+
     adjcells <- cellfocals[cell,]
 
     elev_window <- focals[cell,]
@@ -51,32 +52,51 @@ thermal_erode <- function(r, talus_angle=40, relax=0.25, iterations=1){  # https
   return(flow_path)
 }
 
+# .flow_downhill2 <- function(r, cellfocals, startcell){
+#   flowdir <- terra::terrain(r, v='flowdir')
+#   #flowdir <- terra::classify(flowdir, rcl=data.frame('from'=c(32, 64, 128, 16, 1, 8, 4, 2, 0), 'to'=c(1, 2, 3, 4, 6, 7, 8, 9, 5)))
+#
+#   #names(cellfocals) <- c('X32', 'X64', 'X128', 'X16', 'X0', 'X1', 'X8', 'X4', 'X2')
+#   dirmap <- data.frame('from'=c(32, 64, 128, 16, 1, 8, 4, 2, 0), 'to'=c(1, 2, 3, 4, 6, 7, 8, 9, 5))
+#
+#   flow_path <- c()
+#   cell <- startcell
+#   while(T){
+#     flow_path <- c(flow_path, cell)
+#     downdir <- flowdir[cell][[1]]
+#     if(downdir==0){break} else{
+#       cell<-cellfocals[cell, dirmap[dirmap$from==downdir,'to']]
+#       if(cell%in%flow_path){break}
+#     }
+#   }
+#   return(flow_path)
+# }
 
 #' @export
 rainfall_erode <- function(r, precipitons=as.integer(terra::ncell(r)/10), frac=0.33, rainfall=terra::rast(r, vals=1)){  # https://www.sciencedirect.com/science/article/pii/S0098300400001679
 
-  r_cells <- .cellrast(r)
+  rainfall <- terra::ifel(r<0, NA, rainfall)  # don't bother dropping precipitons on submerged land
+
+  cellfocals <- terra::focalValues(.cellrast(r))
   precip_sites <- terra::spatSample(rainfall, precipitons, method='weights', replace=T, cells=T)
-  all_flow_paths <- c()
+  #all_flow_paths <- c()
 
   pb <- txtProgressBar(min = 0, max = precipitons, style=3)
   for (i in 1:precipitons){
 
     precip_site <- precip_sites[i, 'cell']
 
-    flow_path <- .flow_downhill(r, r_cells, precip_site)
-    all_flow_paths <- c(all_flow_paths, flow_path)
+    flow_path <- .flow_downhill(r, cellfocals, precip_site)
+    #all_flow_paths <- c(all_flow_paths, flow_path)
     path_length <- length(flow_path)
     if(path_length<3){next}
 
     elevations <- r[flow_path][,1]
 
-    dh <- elevations[1:(path_length-1),1] - elevations[2:path_length, 1]
+    sediment_moved <- frac * (elevations[1:(path_length-1)] - elevations[2:path_length])  # the fraction times the height difference between each cell
 
-    # sediment_moved <- frac * (elevations[1:(path_length-1),1] - elevations[2:path_length, 1])  # the fraction times the height difference between each cell
-    #
-    # elevations[1:(path_length-1),1] <- elevations[1:(path_length-1),1] - sediment_moved  # pull the amount from the upper slopes
-    # elevations[2:path_length, 1] <- elevations[2:path_length, 1] + sediment_moved  # and add it to the lower slopes
+    elevations[1:(path_length-1)] <- elevations[1:(path_length-1)] - sediment_moved  # pull the amount from the upper slopes
+    elevations[2:path_length] <- elevations[2:path_length] + sediment_moved  # and add it to the lower slopes
 
     # for(j in 2:path_length){
     #   sediment_moved <- frac*(elevations[j-1] - elevations[j])
@@ -89,13 +109,23 @@ rainfall_erode <- function(r, precipitons=as.integer(terra::ncell(r)/10), frac=0
     setTxtProgressBar(pb, i)
   }
 
-  pathvis <- terra::rast(r, vals=NA); pathvis[all_flow_paths] <- 1
-  render_terrain(r); terra::plot(pathvis, add=T)
+  #pathvis <- terra::rast(r, vals=NA); pathvis[all_flow_paths] <- 1
+  #render_terrain(r); terra::plot(pathvis, add=T)
 
   return(r)
 }
 
 
+
+#' @export
+incise_flow <- function(r, log_base){
+  # Get an uphill pixel count for every point on the map
+
+  for(cell in cells){
+
+  }
+
+}
 
 
 
