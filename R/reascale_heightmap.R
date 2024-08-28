@@ -4,5 +4,7 @@ rescale_heightmap <- function(r, max=5000, min=-5000){
   inmax <- max(vals)
   inmin <- min(vals)
 
-  return((r-inmin)/(inmax-inmin)*(max-min)+min)
+  r_out <- terra::as.int((r-inmin)/(inmax-inmin)*(max-min)+min)
+
+  return(r_out)
 }
