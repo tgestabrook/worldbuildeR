@@ -3,7 +3,6 @@
 export(add_noise)
 export(dilate)
 export(generate_perlin_noise)
-export(hello)
 export(incise_flow)
 export(pinch)
 export(rainfall_erode)
