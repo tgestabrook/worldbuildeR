@@ -149,9 +149,9 @@ rainfall_erode <- function(r, precipitons=as.integer(terra::ncell(r)/10), frac=0
 #'
 #'
 #' @param r `terra::SpatRaster` object containing a digital elevation model.
-#' @param log_base
-#' @param threshold integer, minimum number of upstream cells required to gouge a channel
-#' @param blur TRUE (default) or FALSE. Indicates whether the flow accumulation map should be blurred with a mean filter
+#' @param log_base numeric, the base of the logarithm used to transform the flow accumulation counts.
+#' @param threshold integer, minimum number of upstream cells required to gouge a channel.
+#' @param blur TRUE (default) or FALSE. Indicates whether the flow accumulation map should be blurred with a mean filter.
 #'
 #' @export
 incise_flow <- function(r, log_base=1.5, threshold=100, blur=T){
