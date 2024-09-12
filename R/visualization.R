@@ -22,7 +22,7 @@ water_cols <- c('#71ABD8', '#79B2DE', '#84B9E3', '#8DC1EA', '#96C9F0', '#A1D2F7'
 #' @param flat_water TRUE or FALSE (default). Indicates whether to display a bathymetric color gradient for elevations below 0. If TRUE, all elevations below 0 will be displayed as a uniform shade of blue.
 #'
 #' @export
-render_terrain <- function(r, shaded=T, flat_water=F){
+render_terrain <- function(r, shaded=T, flat_water=F, streams=F){
 
   above_sl <- terra::ifel(r>0, r, NA)
   below_sl <- terra::ifel(r<=0, r, NA)
@@ -34,6 +34,11 @@ render_terrain <- function(r, shaded=T, flat_water=F){
   } else(
     terra::plot(below_sl, type='continuous', range=c(-3000, 0), fill_range=T, col=grDevices::colorRampPalette(water_cols)(100), add=T, legend=F)
   )
+
+  if(streams!=F){
+    streams <- terra::ifel(terra::flowAccumulation(terra::terrain(above_sl, v='flowdir')) > streams, 1, NA)
+    terra::plot(streams, add=T, col='#84B9E3', legend=F)
+  }
 
   if(shaded==T){
     hillshade = terra::shade(terra::terrain(above_sl, v='slope', unit='radians'), terra::terrain(above_sl, v='aspect', unit='radians'), normalize=T)

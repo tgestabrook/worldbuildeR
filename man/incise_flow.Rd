@@ -9,9 +9,11 @@ incise_flow(r, log_base = 1.5, threshold = 100, blur = T)
 \arguments{
 \item{r}{\code{terra::SpatRaster} object containing a digital elevation model.}
 
-\item{threshold}{integer, minimum number of upstream cells required to gouge a channel}
+\item{log_base}{numeric, the base of the logarithm used to transform the flow accumulation counts.}
 
-\item{blur}{TRUE (default) or FALSE. Indicates whether the flow accumulation map should be blurred with a mean filter}
+\item{threshold}{integer, minimum number of upstream cells required to gouge a channel.}
+
+\item{blur}{TRUE (default) or FALSE. Indicates whether the flow accumulation map should be blurred with a mean filter.}
 }
 \description{
 Lower terrain according to the logarithm of flow accumulation.
