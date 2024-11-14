@@ -53,3 +53,29 @@ test <- rainfall_erode(test)
 test4 <- incise_flow(sample_dem)
 test4 <- incise_flow(test4)
 render_terrain(test4)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,7 +4,7 @@
 \alias{render_terrain}
 \title{Render a DEM}
 \usage{
-render_terrain(r, shaded = T, flat_water = F)
+render_terrain(r, shaded = T, flat_water = F, streams = F)
 }
 \arguments{
 \item{r}{\code{terra::SpatRaster} object containing a digital elevation model}

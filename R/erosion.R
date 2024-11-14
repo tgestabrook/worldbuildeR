@@ -152,10 +152,11 @@ rainfall_erode <- function(r, precipitons=as.integer(terra::ncell(r)/10), frac=0
 #' @param log_base numeric, the base of the logarithm used to transform the flow accumulation counts.
 #' @param threshold integer, minimum number of upstream cells required to gouge a channel.
 #' @param blur TRUE (default) or FALSE. Indicates whether the flow accumulation map should be blurred with a mean filter.
+#' @param rainfall Raster map of rainfall weights
 #'
 #' @export
-incise_flow <- function(r, log_base=1.5, threshold=100, blur=T){
-  flowacc <- terra::flowAccumulation(terra::terrain(r, v='flowdir'))
+incise_flow <- function(r, log_base=1.5, threshold=100, blur=T, rainfall=NULL){
+  flowacc <- terra::flowAccumulation(terra::terrain(r, v='flowdir'), weight=rainfall)
   flowacc[flowacc<threshold] <- 1
 
   if(blur==T){flowacc <- terra::focal(flowacc, w=3, 'mean')}
